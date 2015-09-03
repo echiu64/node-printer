@@ -4,7 +4,7 @@ var spawnSync = require('child_process').spawnSync;
 var _ = require ('underscore');
 var utils = require('util');
 var events = require('events');
-var debug = requre('debug')('node-printer');
+var debug = require('debug')('node-printer');
 utils.inherits(Printer, events.EventEmitter);
 
 /**
