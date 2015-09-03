@@ -4,6 +4,7 @@ var spawnSync = require('child_process').spawnSync;
 var _ = require ('underscore');
 var utils = require('util');
 var events = require('events');
+var debug = requre('debug')('node-printer');
 utils.inherits(Printer, events.EventEmitter);
 
 /**
@@ -62,8 +63,7 @@ var generalOptions = {
   'o': {
     'options': ['o'],
     'description': '"name=value [name=value ...]" Sets one or more job options',
-    'expects': 'string',
-    'default': ''
+    'expects': 'string'
   },
   'q': {
     'options': ['q', 'priority'],
@@ -221,7 +221,7 @@ var optionsFactory = function (options) {
     _.each(selOOptions, function(oOption, oOptionId) {
       if(oOptions[oOptionId].expects === '') {
         if(oOption) {
-          selOoptionsString = selOoptionsString + ' ' + oOptionId;
+          selOoptionsString = selOoptionsString + ' -o ' + oOptionId;
         }
       } else {
         selOoptionsString = selOoptionsString + ' ' + oOptionId + '=' + oOption;
@@ -343,6 +343,7 @@ Printer.prototype.printBuffer = function(data, options) {
   var args = buildArgs(options);
   args.push('-d', self.name);
 
+  debug('printBuffer spawn lp: ', args);
   var lp = spawn('lp', args);
 
   lp.stdin.write(data);
@@ -367,7 +368,8 @@ Printer.prototype.printFile = function(filePath, options) {
 
   args.push('--');
   args.push(filePath);
-
+  
+  debug('printFile spawn lp: ', args);
   var lp = spawn('lp', args);
 
   var job = new Job(lp);
@@ -376,6 +378,10 @@ Printer.prototype.printFile = function(filePath, options) {
   });
 
   job.on('completed', function() {
+    self.jobs.splice(self.jobs.indexOf(job), 1);
+  });
+
+  job.on('error', function() {
     self.jobs.splice(self.jobs.indexOf(job), 1);
   });
 

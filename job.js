@@ -1,6 +1,7 @@
 var utils = require('util');
 var events = require('events');
 var spawn = require('child_process').spawn;
+var debug = require('debug')('node-printer');
 
 utils.inherits(Job, events.EventEmitter);
 
@@ -24,6 +25,7 @@ function Job(lp) {
       self.emit('sent', self.identifier);
     }
     else {
+      debug('job ' + self.identifier + ' error: ', error);
       self.emit('error', error);
     }
   });
