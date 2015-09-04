@@ -121,6 +121,11 @@ var oOptions = {
     'description': '',
     'expects': 'number'
   },
+  'position': {
+      'options': ['position'],
+      'description': 'For CUPS supported positioning (center, top, left, right, top-left, top-right, bottom, bottom-left, bottom-right)',
+      'expects': 'string'
+  },
   'sides': {
     'options': ['sides'],
     'description': 'Prints on one or two sides of the  paper.  The  value  "two-sided-long-edge" is  normally  used  when printing portrait (unrotated) pages, while "two-sided-short-edge" is used for landscape pages.',
